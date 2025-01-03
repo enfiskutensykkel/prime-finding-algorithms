@@ -61,6 +61,7 @@ static void percolate_down(size_t idx)
 static int insert_prime(uint64_t n)
 {
     if (size + 1 == capacity) {
+        fprintf(stderr, "happens\n");
         size_t newcap = capacity << 1;
         struct prime *newheap = realloc(heap, sizeof(struct prime) * newcap);
 
@@ -92,7 +93,7 @@ int main(int argc, char **argv)
         exit(0);
     }
 
-    capacity = 64;
+    capacity = 1024 * 1024;
     size = 0;
     heap = realloc(NULL, sizeof(struct prime) * capacity);
     if (heap == NULL) {
