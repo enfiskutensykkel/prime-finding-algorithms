@@ -1,6 +1,12 @@
 #ifndef __PARSE_H__
 #define __PARSE_H__
 
-unsigned long long int parse_N(const char *arg);
+#include <stdint.h>
+
+
+/*
+ * Parse a number from a string.
+ */
+uint64_t parse_N(int argc, char * const *argv);
 
 #endif

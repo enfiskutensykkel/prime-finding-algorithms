@@ -1,15 +1,16 @@
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <stdbool.h>
 #include <limits.h>
 #include "parse.h"
 
 
 struct prime
 {
-    unsigned long long int prime;
-    unsigned long long int multiple;
+    uint64_t prime;
+    uint64_t multiple;
 };
 
 
@@ -57,7 +58,7 @@ static void percolate_down(size_t idx)
 }
 
 
-static int insert_prime(unsigned long long int n)
+static int insert_prime(uint64_t n)
 {
     if (size + 1 == capacity) {
         size_t newcap = capacity << 1;
@@ -83,24 +84,12 @@ static int insert_prime(unsigned long long int n)
 
 int main(int argc, char **argv)
 {
-    long long unsigned N;
-    long long unsigned n = 3;
-
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s N\n\nFind prime numbers less than or equal to N.", argv[0]);
-        return 1;
-    }
-    
-    N = parse_N(argv[1]);
-    if (N == 0) {
-        fprintf(stderr, "Invalid number: %s\n", argv[1]);
-        fprintf(stderr, "N must be between 1 and %llu", ULLONG_MAX);
-        return 2;
-    }
+    uint64_t N = parse_N(argc, argv);
+    uint64_t n = 3;
 
     if (N < 2) {
         // we are done, no prime numbers below 2
-        return 0;
+        exit(0);
     }
 
     capacity = 64;
@@ -108,7 +97,7 @@ int main(int argc, char **argv)
     heap = realloc(NULL, sizeof(struct prime) * capacity);
     if (heap == NULL) {
         fprintf(stderr, "Unexpectedly ran out of memory\n");
-        return 3;
+        exit(3);
     }
 
     // the first element in the heap array is just a placeholder
@@ -123,9 +112,9 @@ int main(int argc, char **argv)
             int rc = insert_prime(n);
             if (rc != 0) {
                 fprintf(stderr, "Unexpectedly ran out of memory\n");
-                return 3;
+                exit(3);
             }
-            fprintf(stdout, "%llu\n", n);
+            fprintf(stdout, "%llu\n", (unsigned long long) n);
 
         } else {
             while (heap[1].multiple == n) {
@@ -137,7 +126,8 @@ int main(int argc, char **argv)
         ++n;
     }
 
+#ifndef NDEBUG
     free(heap);
-
-    return 0;
+#endif
+    exit(0);
 }

@@ -1,15 +1,23 @@
 CC := gcc
-CFLAGS += -Wall -Werror -pedantic
+CFLAGS += -Wall -Wextra -pedantic -DNDEBUG
 
 .PHONY: all clean
-all: dijkstra
+all: dijkstra eratosthenes trial
 
 dijkstra: dijkstra.o parse.o
 	$(CC) -o $@ $^
 
+eratosthenes: eratosthenes.o parse.o isqrt.o
+	$(CC) -o $@ $^
+
+trial: trial.o parse.o isqrt.o
+	$(CC) -o $@ $^
+
 clean:
-	$(RM) dijkstra.o parse.o
-	$(RM) dijkstra
+	-$(RM) parse.o isqrt.o
+	-$(RM) eratosthenes eratosthenes.o
+	-$(RM) dijkstra dijkstra.o
+	-$(RM) trial trial.o
 
 %.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
