@@ -35,3 +35,18 @@ def primes():
         else:
             P.append(x)
             yield x
+
+
+if __name__ == "__main__":
+    import sys
+    try:
+        N = int(sys.argv[1])
+    except (KeyError, ValueError):
+        print(f"Usage: {sys.argv[0]} N", file=sys.stderr)
+        sys.exit(2)
+
+    for i, p in enumerate(primes()):
+        if p >= N:
+            break
+
+        print(p, file=sys.stdout)
