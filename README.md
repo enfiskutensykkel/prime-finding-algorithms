@@ -1,7 +1,6 @@
 # Comparison of prime number finding algorithms
-I recently came across a YouTube video[^1] by [b001](https://www.youtube.com/@b001) 
-explaining a prime number finding algorithm by Edsger W. Dijkstra. 
-This algorithm is a trade-off between the 
+I recently came across a YouTube video[^1] explaining a prime number finding 
+algorithm by Edsger W. Dijkstra. This algorithm is a trade-off between the 
 [trial by division](https://en.wikipedia.org/wiki/Trial_division) approach and 
 the [Sieve of Eratosthenes](https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes), 
 with regard to memory consumption and run-time. However, after implementing the 
@@ -94,7 +93,7 @@ Done
 ```
 
 
-[^1]: b001's YouTube video: "[Dijkstra's Hidden Prime Finding Algorithm](https://www.youtube.com/watch?v=fwxjMKBMR7s)". February 2024. Watched: 2025-01-02.
+[^1]: b001, "[Dijkstra's Hidden Prime Finding Algorithm](https://www.youtube.com/watch?v=fwxjMKBMR7s)". February 2024. Watched: 2025-01-02.
 [^2]: Heinrich Hartmann, "[Dijkstra's Prime Number Algoritm](https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)". April 2016. Retrieved: 2025-01-04.
 [^3]: Keith Vetter, "[Dijkstra's Prime Algorithm](https://wiki.tcl-lang.org/page/Dijkstra%27s+Prime+Algorithm). February 2024. Retrieved: 2025-01-02.
 [^4]: Andrew S. Tanenbaum, "[A General-Purpose Macro Processor as a Poor Man's Compiler-Compiler](https://ieeexplore.ieee.org/document/170A2350)". In _IEEE Transactions on Software Engineering_, vol. SE-2, no. 2, pp. 121-125, June 1976. DOI: [10.1109/TSE.1976.233539](https://dx.doi.org/https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)
