@@ -12,17 +12,20 @@ Puzzled by this, I tried looking up the original Dijkstra algorithm to see if
 I had misunderstood something and came across a blog post[^2] detailing the
 algorithm and refactoring it for a modern programming language.
 Reading this, I realized that the implementation explained in the video was
-most likely wrong or lacked some details. By digging through some old Reddit
-threads, I came to the conclusion that the YouTuber had most likely "tricked" 
+most likely wrong or lacked some details. By digging through an old
+[Reddit thread](https://www.reddit.com/r/learnprogramming/comments/1apk2dk/help_needed_with_recreating_dijkstras_prime/),
+I came to the conclusion that the YouTuber had most likely "tricked" 
 himself by using Python and using a [heap implementation written 
 in C](https://docs.python.org/3/library/heapq.html) that was so fast enough 
 to hide away the overhead of the incorrect implementation. Additionally,
 it appears that the sieve implementation was non-optimized, thus using more
 space than the minimal possible, i.e., it didn't use a bitmap.
 
-I corroborated this by looking at another blogger's implementation[^3] 
-also based on the explanation from the YouTube video, which was similar to
-my initial implementation.
+I corroborated this theory by looking at yet another blogger's 
+implementation[^3] which was also based on the explanation from 
+the YouTube video. Seeing how this implementation was similar to
+mine, I drew the conclusion that the algorithm explained in the video
+is not quite correct, even though it also produces prime numbers.
 
 ## Dijkstra's algorithm
 This is the original algorithm (adapted to C code) from the 
