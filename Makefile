@@ -1,5 +1,9 @@
 CFLAGS += -Wall -Wextra -pedantic -Ilib
 
+ifdef RELEASE
+CFLAGS += -DNDEBUG=1 -O3
+endif
+
 EXECS := dijkstra sieve trial b001 b001_array
 
 .PHONY: all lib clean $(addsuffix -clean,$(EXECS))

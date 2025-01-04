@@ -92,20 +92,20 @@ int main(int argc, char **argv)
     }
     fprintf(stdout, "%llu\n", 2ULL);
 
-    uint64_t square = 4;
+    uint64_t multiple = 4;
 
     for (uint64_t x = 3; x <= N; x += 2) {
 
-        if (square <= x) {
+        if (multiple <= x) {
             uint64_t next_prime = primes->values[multiples->length + 1];
 
-            if (push(&multiples, square) != 0) {
+            if (push(&multiples, multiple) != 0) {
                 fprintf(stderr, "Unexpectedly ran out of memory\n");
                 free(primes);
                 free(multiples);
                 exit(3);
             }
-            square = next_prime * next_prime;
+            multiple = next_prime * next_prime;  // Square the prime
         }
 
         for (size_t k = 0; k < multiples->length; ++k) {
@@ -130,7 +130,9 @@ not_prime:
         (void) 0;
     }
     
+#ifndef NDEBUG
     free(primes);
     free(multiples);
+#endif
     exit(0);
 }

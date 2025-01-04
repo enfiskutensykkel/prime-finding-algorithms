@@ -1,3 +1,9 @@
+# Swap files and backup files
+.*.swp
+*~
+*.orig
+\#*#
+
 # Prerequisites
 *.d
 

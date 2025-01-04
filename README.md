@@ -1,43 +1,42 @@
 
+## Dijkstra's algorithm
 This is the original algorithm (adapted to C code) from the original paper [2]. The algorithm finds the first `N` primes.
 
 ```C
 const int N = 100;
 const int M = 10;  // square root of 100
 
-int x, square, i, k, lim;
-bool prim;
-int p[N];
-int v[M];
+int x, square, i, k, lim, prim, P[N], V[M];
 
-p[1] = 2;
+P[1] = 2;  // set the initial prime
 printf("%d\n", 2);
+
 x = 1;
 lim = 1;
-square = 4;
+square = 4;  // set the initial multiple of the first prime
 
 for (i = 2; i < N; ++i) {
     do {
         x = x + 2;
         if (square <= x) {
-            v[lim] = square;
+            V[lim] = square;
             ++lim;
-            square = p[lim] * p[lim];
+            square = P[lim] * P[lim];
         }
 
         k = 2;
         prim = true;
 
         while (prim && k < lim) {
-            if (v[k] < x) {
-                v[k] = v[k] + p[k];
+            if (V[k] < x) {
+                V[k] += P[k];
             }
-            prim = x != v[k];
+            prim = x != V[k];
             ++k;
         }
     } while (!prim); // uses repeat - until prim
 
-    p[i] = x;
+    P[i] = x;
     printf("%d\n", x);
 }
 ```

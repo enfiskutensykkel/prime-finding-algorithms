@@ -97,7 +97,11 @@ int main(int argc, char **argv)
         exit(3);
     }
 
-    insert_prime(2);
+    if (insert_prime(2) != 0) {
+        fprintf(stderr, "Unexpectedly ran out of memory\n");
+        free(heap);
+        exit(3);
+    }
     fprintf(stdout, "%llu\n", 2ULL);
 
     while (n <= N) {
@@ -105,6 +109,7 @@ int main(int argc, char **argv)
             int rc = insert_prime(n);
             if (rc != 0) {
                 fprintf(stderr, "Unexpectedly ran out of memory\n");
+                free(heap);
                 exit(3);
             }
             fprintf(stdout, "%llu\n", (unsigned long long) n);
@@ -119,6 +124,8 @@ int main(int argc, char **argv)
         ++n;
     }
 
+#ifndef NDEBUG
     free(heap);
+#endif
     exit(0);
 }

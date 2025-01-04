@@ -51,6 +51,8 @@ int main(int argc, char **argv)
         }
     }
 
+#ifndef NDEBUG
     free(bitmap);
+#endif
     exit(0);
 }
