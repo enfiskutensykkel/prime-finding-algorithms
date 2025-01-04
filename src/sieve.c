@@ -28,6 +28,7 @@ int main(int argc, char **argv)
 
     bitmap = calloc((N / 64) + 1, sizeof(uint64_t));
     if (bitmap == NULL) {
+        fprintf(stderr, "Unexpectedly ran out of memory\n");
         exit(3);
     }
 
@@ -50,8 +51,6 @@ int main(int argc, char **argv)
         }
     }
 
-#ifndef NDEBUG
     free(bitmap);
-#endif
     exit(0);
 }

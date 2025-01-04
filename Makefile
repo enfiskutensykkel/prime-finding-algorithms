@@ -1,23 +1,24 @@
-CC := gcc
-CFLAGS += -Wall -Wextra -pedantic -DNDEBUG
+CFLAGS += -Wall -Wextra -pedantic -Ilib
 
-.PHONY: all clean
-all: dijkstra eratosthenes trial
+EXECS := dijkstra sieve trial b001 b001_array
 
-dijkstra: dijkstra.o parse.o
-	$(CC) -o $@ $^
+.PHONY: all lib clean $(addsuffix -clean,$(EXECS))
+all: $(EXECS)
 
-eratosthenes: eratosthenes.o parse.o isqrt.o
-	$(CC) -o $@ $^
+define executable
+$(1): $(1).o lib.a
+	$$(CC) -o $$@ $$^
 
-trial: trial.o parse.o isqrt.o
-	$(CC) -o $@ $^
+$(1)-clean:
+	-$$(RM) $(1) $(1).o
+endef
+$(foreach target,$(EXECS),$(eval $(call executable,$(target))))
 
-clean:
-	-$(RM) parse.o isqrt.o
-	-$(RM) eratosthenes eratosthenes.o
-	-$(RM) dijkstra dijkstra.o
-	-$(RM) trial trial.o
+lib.a: parse.o isqrt.o
+	$(AR) rcs $@ $^
+
+clean: $(addsuffix -clean,$(EXECS))
+	-$(RM) lib.a parse.o isqrt.o
 
 %.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<

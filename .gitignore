@@ -31,7 +31,9 @@
 # Executables
 dijkstra
 trial
-eratosthenes
+sieve
+b001
+b001_array
 *.exe
 *.out
 *.app

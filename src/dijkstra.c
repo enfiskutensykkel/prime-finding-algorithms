@@ -3,81 +3,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <limits.h>
 #include "parse.h"
 
 
-struct prime
+struct array
 {
-    uint64_t prime;
-    uint64_t multiple;
+    size_t capacity;
+    size_t length;
+    uint64_t values[];
 };
 
 
-static size_t capacity = 0;
-static size_t size = 0;
-
-static struct prime *heap = NULL;
-
-
-static void percolate_up(size_t idx)
+static int init(struct array **v, size_t capacity)
 {
-    size_t child;
-
-    while ((child = idx >> 1) > 0) {
-
-        if (heap[idx].multiple < heap[child].multiple) {
-            struct prime p = heap[child];
-            heap[child] = heap[idx];
-            heap[idx] = p;
-        }
-
-        idx = child;
+    if (capacity == 0) {
+        return EINVAL;
     }
+
+    struct array *arr = malloc(sizeof(struct array) + sizeof(uint64_t) * capacity);
+    if (arr == NULL) {
+        return ENOMEM;
+    }
+
+    arr->capacity = capacity;
+    arr->length = 0;
+    *v = arr;
+
+    return 0;
 }
 
 
-static void percolate_down(size_t idx)
+static int expand(struct array **v)
 {
-    size_t child;
-
-    while ((child = idx << 1) <= size) {
-
-        if (child + 1 <= size && heap[child+1].multiple < heap[child].multiple) {
-            ++child;
-        }
-
-        if (heap[idx].multiple > heap[child].multiple) {
-            struct prime p = heap[idx];
-            heap[idx] = heap[child];
-            heap[child] = p;
-        }
-
-        idx = child;
+    size_t newcap = (*v)->capacity << 1;
+    struct array *newarr = realloc(*v, sizeof(struct array) + sizeof(uint64_t) * newcap);
+    if (newarr == NULL) {
+        return ENOMEM;
     }
+
+    newarr->capacity = newcap;
+    *v = newarr;
+
+    return 0;
 }
 
 
-static int insert_prime(uint64_t n)
+static int push(struct array **v, uint64_t x)
 {
-    if (size + 1 == capacity) {
-        fprintf(stderr, "happens\n");
-        size_t newcap = capacity << 1;
-        struct prime *newheap = realloc(heap, sizeof(struct prime) * newcap);
-
-        if (newheap == NULL) {
-            return ENOMEM;
+    if ((*v)->length == (*v)->capacity) {
+        int rc = expand(v);
+        if (rc != 0) {
+            return rc;
         }
-
-        heap = newheap;
-        capacity = newcap;
     }
 
-    size_t idx = ++size;
-    heap[idx].prime = n;
-    heap[idx].multiple = n * n;
-
-    percolate_up(idx);
+    (*v)->values[(*v)->length++] = x;
 
     return 0;
 }
@@ -85,50 +65,72 @@ static int insert_prime(uint64_t n)
 
 int main(int argc, char **argv)
 {
-    uint64_t N = parse_N(argc, argv);
-    uint64_t n = 3;
+    uint64_t N = parse_N(argc, argv);  // "Up until N" and not "N primes" as the original algorithm
+    struct array *primes = NULL;  // P
+    struct array *multiples = NULL;  // V
 
     if (N < 2) {
-        // we are done, no prime numbers below 2
         exit(0);
     }
 
-    capacity = 1024 * 1024;
-    size = 0;
-    heap = realloc(NULL, sizeof(struct prime) * capacity);
-    if (heap == NULL) {
+    if (init(&primes, 1000) != 0) {
         fprintf(stderr, "Unexpectedly ran out of memory\n");
         exit(3);
     }
 
-    // the first element in the heap array is just a placeholder
-    heap[0].prime = 0;
-    heap[0].multiple = 0;
+    if (init(&multiples, 100) != 0) {
+        free(primes);
+        fprintf(stderr, "Unexpectedly ran out of memory\n");
+        exit(3);
+    }
 
-    insert_prime(2);
+    if (push(&primes, 2) != 0) {
+        free(primes);
+        free(multiples);
+        fprintf(stderr, "Unexpectedly ran out of memory\n");
+        exit(3);
+    }
     fprintf(stdout, "%llu\n", 2ULL);
 
-    while (n <= N) {
-        if (n < heap[1].multiple) {
-            int rc = insert_prime(n);
-            if (rc != 0) {
+    uint64_t square = 4;
+
+    for (uint64_t x = 3; x <= N; x += 2) {
+
+        if (square <= x) {
+            uint64_t next_prime = primes->values[multiples->length + 1];
+
+            if (push(&multiples, square) != 0) {
                 fprintf(stderr, "Unexpectedly ran out of memory\n");
+                free(primes);
+                free(multiples);
                 exit(3);
             }
-            fprintf(stdout, "%llu\n", (unsigned long long) n);
+            square = next_prime * next_prime;
+        }
 
-        } else {
-            while (heap[1].multiple == n) {
-                heap[1].multiple += heap[1].prime;
-                percolate_down(1);
+        for (size_t k = 0; k < multiples->length; ++k) {
+            if (multiples->values[k] < x) {
+                multiples->values[k] += primes->values[k];
+            }
+
+            if (multiples->values[k] == x) {
+                goto not_prime;  // The irony of using goto in a Dijkstra algorithm is not lost on me :)
             }
         }
 
-        ++n;
-    }
+        fprintf(stdout, "%llu\n", (unsigned long long) x);
+        if (push(&primes, x) != 0) {
+            fprintf(stderr, "Unexpectedly ran out of memory\n");
+            free(primes);
+            free(multiples);
+            exit(3);
+        }
 
-#ifndef NDEBUG
-    free(heap);
-#endif
+not_prime:
+        (void) 0;
+    }
+    
+    free(primes);
+    free(multiples);
     exit(0);
 }
