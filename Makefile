@@ -4,7 +4,7 @@ ifdef RELEASE
 CFLAGS += -DNDEBUG=1 -O3
 endif
 
-EXECS := dijkstra sieve trial b001 b001_array
+EXECS := dijkstra sieve trial trial_list b001 b001_array
 
 .PHONY: all lib clean $(addsuffix -clean,$(EXECS))
 all: $(EXECS)

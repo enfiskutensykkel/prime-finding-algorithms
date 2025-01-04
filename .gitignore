@@ -37,6 +37,7 @@
 # Executables
 dijkstra
 trial
+trial_list
 sieve
 b001
 b001_array
