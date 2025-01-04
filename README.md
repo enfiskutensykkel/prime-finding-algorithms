@@ -10,18 +10,24 @@ expected results: Trial by division ran much faster, and by using a simple bitma
 the sieve had less of a memory footprint. 
 
 Puzzled by this, I tried looking up the original Dijkstra algorithm to see if 
-I had misunderstood something and came across a blog post by Heinrich Hartmann[^2].
-Looking at this, I realized that the implementation explained in the video was
-most likely wrong, and by digging a bit through old Reddit posts etc. it seems
-that the YouTube user had "fooled" himself by using Python and a [heap 
-implementation written in C](https://docs.python.org/3/library/heapq.html) 
-that was so fast that it hid away the fact that the implementation 
-was not only incorrect, but that the sieve implementation also was inefficient.
-Another bloggers[^3] had also done the same  "mistake".
+I had misunderstood something and came across a blog post[^2] detailing the
+algorithm and refactoring it for a modern programming language.
+Reading this, I realized that the implementation explained in the video was
+most likely wrong or lacked some details. By digging through some old Reddit
+threads, I came to the conclusion that the YouTuber had most likely "tricked" 
+himself by using Python and using a [heap implementation written 
+in C](https://docs.python.org/3/library/heapq.html) that was so fast enough 
+to hide away the overhead of the incorrect implementation. Additionally,
+it appears that the sieve implementation was non-optimized, thus using more
+space than the minimal possible, i.e., it didn't use a bitmap.
+
+I corroborated this by looking at another blogger's implementation[^3] 
+also based on the explanation from the YouTube video, which was similar to
+my initial implementation.
 
 ## Dijkstra's algorithm
-This is the original algorithm (adapted to C code) from the original paper[^4]. The algorithm finds the first `N` primes.
-
+This is the original algorithm (adapted to C code) from the 
+original paper[^4]. The algorithm finds `N` number of primes numbers:
 ```C
 const int N = 100;
 const int M = 10;  // square root of 100
@@ -87,7 +93,7 @@ algorithm=dijkstra, iterations=100000000, runtime=4.00secs, memory_usage=46376kB
 Done
 ```
 
-## References
+
 [^1]: b001's YouTube video: "[Dijkstra's Hidden Prime Finding Algorithm](https://www.youtube.com/watch?v=fwxjMKBMR7s)". February 2024. Watched: 2025-01-02.
 [^2]: Heinrich Hartmann, "[Dijkstra's Prime Number Algoritm](https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)". April 2016. Retrieved: 2025-01-04.
 [^3]: Keith Vetter, "[Dijkstra's Prime Algorithm](https://wiki.tcl-lang.org/page/Dijkstra%27s+Prime+Algorithm). February 2024. Retrieved: 2025-01-02.
