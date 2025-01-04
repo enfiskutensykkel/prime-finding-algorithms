@@ -20,7 +20,7 @@ was not only incorrect, but that the sieve implementation also was inefficient.
 Another bloggers[^3] had also done the same  "mistake".
 
 ## Dijkstra's algorithm
-This is the original algorithm (adapted to C code) from the original paper[^2]. The algorithm finds the first `N` primes.
+This is the original algorithm (adapted to C code) from the original paper[^4]. The algorithm finds the first `N` primes.
 
 ```C
 const int N = 100;
@@ -89,6 +89,6 @@ Done
 
 ## References
 [^1]: b001's YouTube video: "[Dijkstra's Hidden Prime Finding Algorithm](https://www.youtube.com/watch?v=fwxjMKBMR7s)". February 2024. Watched: 2025-01-02.
-[^2]: Heinrich Hartmann, "[Dijkstra's Prime Number Algoritm](https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)". April 2016. URL: [https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html]". Retrieved: 2025-01-04.
+[^2]: Heinrich Hartmann, "[Dijkstra's Prime Number Algoritm](https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)". April 2016. Retrieved: 2025-01-04.
 [^3]: Keith Vetter, "[Dijkstra's Prime Algorithm](https://wiki.tcl-lang.org/page/Dijkstra%27s+Prime+Algorithm). February 2024. Retrieved: 2025-01-02.
-[^3]: Andrew S. Tanenbaum, "[A General-Purpose Macro Processor as a Poor Man's Compiler-Compiler](https://ieeexplore.ieee.org/document/170A2350)". In _IEEE Transactions on Software Engineering_, vol. SE-2, no. 2, pp. 121-125, June 1976. DOI: [10.1109/TSE.1976.233539](https://dx.doi.org/https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)
+[^4]: Andrew S. Tanenbaum, "[A General-Purpose Macro Processor as a Poor Man's Compiler-Compiler](https://ieeexplore.ieee.org/document/170A2350)". In _IEEE Transactions on Software Engineering_, vol. SE-2, no. 2, pp. 121-125, June 1976. DOI: [10.1109/TSE.1976.233539](https://dx.doi.org/https://www.heinrichhartmann.com/archive/Dijkstra%27s-Prime-Number-Algorithm.html)
