@@ -121,6 +121,19 @@ Running b001_array...OK; 5.69 seconds (1596 kB)
 ```
 
 When piped to file, the benchmark script will produce a CSV formatted output.
+```
+$ ./benchmark > results.dat
+$ cat results.dat
+#algorithm; N; runtime; memory_usage
+sieve; 10000000; 0.05; 2524
+dijkstra; 10000000; 0.24; 6824
+trial_list; 10000000; 0.69; 22212
+trial; 10000000; 0.67; 6492
+optimized_dijkstra; 10000000; 0.22; 6728
+b001; 10000000; 1.05; 11776
+b001_array; 10000000; 5.68; 1480
+```
+
 
 ## Conclusion
 I ran on my Lenovo ThinkPad E14 Gen4 laptop, with an AMD Ryzen 7 5825U CPU
