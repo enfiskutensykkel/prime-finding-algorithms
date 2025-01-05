@@ -1,3 +1,9 @@
+/*
+ * This is the algorithm as I understood it from b001's YouTube video:
+ * https://www.youtube.com/watch?v=fwxjMKBMR7s
+ *
+ * It uses a heap to always sort the lowest multiples first.
+ */
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>

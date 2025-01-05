@@ -1,3 +1,10 @@
+/*
+ * This is a variant of b001's algorithm by Keith Vetter
+ * https://wiki.tcl-lang.org/page/Dijkstra%27s+Prime+Algorithm
+ * 
+ * Instead of using a heap, it uses an array and sorts it to keep the
+ * lowest multiples first.
+ */
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -27,7 +34,7 @@ static int init(struct array **v, size_t capacity)
         return EINVAL;
     }
 
-    struct array *arr = malloc(sizeof(struct array) + sizeof(uint64_t) * capacity);
+    struct array *arr = malloc(sizeof(struct array) + sizeof(struct prime) * capacity);
     if (arr == NULL) {
         return ENOMEM;
     }
@@ -43,6 +50,7 @@ static int init(struct array **v, size_t capacity)
 static int expand(struct array **v)
 {
     size_t newcap = (*v)->capacity << 1;
+    fprintf(stderr, "%zu %zu\n", (*v)->capacity, newcap);
     struct array *newarr = realloc(*v, sizeof(struct array) + sizeof(struct prime) * newcap);
     if (newarr == NULL) {
         return ENOMEM;

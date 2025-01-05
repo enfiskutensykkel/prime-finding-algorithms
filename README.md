@@ -27,6 +27,7 @@ the YouTube video. Seeing how this implementation was similar to
 mine, I drew the conclusion that the algorithm explained in the video
 is not quite correct, even though it also produces prime numbers.
 
+
 ## Dijkstra's algorithm
 This is the original algorithm (adapted to C code) from the 
 original paper[^4]. The algorithm finds `N` number of primes numbers:
@@ -71,15 +72,37 @@ for (i = 2; i < N; ++i) {
 Note that it assumes array indices starts on 1.
 
 
+## Implemented algorithms
+* `sieve`: The sieve of Eratosthenes algorithm for finding prime numbers.
+  Nothing really special, but I use a bitmap to conserve some space.
+* `trial`: Using trial by division for finding primes. 
+  Previously found primes are stored in an array and then checked 
+  against for new candidates.
+* `trial_list`: A variant of the trial by division using a list
+  to store primes.
+* `b001`: The algorithm (as I understood it) from the YouTube video[^1].
+  Uses a min-heap to store multiples/factors so that the lowest multiple
+  is always first.
+* `b001_array`: A variant of the algorithm[^3] by Keith Vetter.
+  Instead of a heap, it uses a sorted array to store multiples/factors.
+* `dijkstra`: An implementation of the algorithm from the Tannenbaum
+  paper.
+* `dijkstra_optimized`: The algorithm from the Tannenbaum paper but with
+  less fancy array/realloc handling. Slightly faster.
+
+
 ## Building and running
 Run `make` as follows to build executables in the project directory:
 ```
-$ make RELEASE=1
+$ make release
 ```
 
-The `RELEASE=1` variable to make enables `-O3` and sets the `NDEBUG` define
+The release targets makes sure that `-O3` is set and sets the `NDEBUG` define
 for all the programs. The implementations use this to skip freeing memory 
 on completion, since we don't want to benchmark clean up code.
+
+All C source files in `src` are expected to be stand-alone executables, i.e.,
+C code with `main()`. This just made it easier to implement multiple algorithms.
 
 All programs expect a number `N` as argument, for finding prime numbers up to that number. 
 For example, `$ ./sieve 100` prints all prime numbers up to 100.
@@ -87,13 +110,28 @@ For example, `$ ./sieve 100` prints all prime numbers up to 100.
 The benchmark script uses `/usr/bin/time` for measuring run-time (user time) and memory usage:
 ```
 $ ./benchmark
-Running programs with N=100000000...
-algorithm=b001, iterations=100000000, runtime=13.12secs, memory_usage=91336kB
-algorithm=trial, iterations=100000000, runtime=11.67secs, memory_usage=46248kB
-algorithm=sieve, iterations=100000000, runtime=0.51secs, memory_usage=13668kB
-algorithm=dijkstra, iterations=100000000, runtime=4.00secs, memory_usage=46376kB
-Done
+Benchmark N=10000000, detected algorithms: sieve dijkstra trial_list trial optimized_dijkstra b001 b001_array
+Running sieve...OK; 0.04 seconds (2748 kB)
+Running dijkstra...OK; 0.23 seconds (6588 kB)
+Running trial_list...OK; 0.69 seconds (21980 kB)
+Running trial...OK; 0.67 seconds (6748 kB)
+Running optimized_dijkstra...OK; 0.23 seconds (6824 kB)
+Running b001...OK; 1.04 seconds (11720 kB)
+Running b001_array...OK; 5.69 seconds (1596 kB)
 ```
+
+When piped to file, the benchmark script will produce a CSV formatted output.
+
+## Conclusion
+I ran on my Lenovo ThinkPad E14 Gen4 laptop, with an AMD Ryzen 7 5825U CPU
+and 40 GiB of RAM. Using Fedora Linux 41 with the 6.12.6 version of the Linux
+kernel and GCC version 14.2.1.
+
+As mentioned above, the algorithm as presented in the original YouTube video
+is most likely not entirely correct. The sieve of Eratosthenes is the fastest
+algorithm, and by using a bitmap, it's memory usage can be quite condensed
+down. `-O3` seems to have a really huge effect, particularly on the slowest 
+algorithms, which probably means that I'm doing something silly somewhere.
 
 
 [^1]: b001, "[Dijkstra's Hidden Prime Finding Algorithm](https://www.youtube.com/watch?v=fwxjMKBMR7s)". February 2024. Watched: 2025-01-02.

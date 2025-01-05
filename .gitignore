@@ -41,6 +41,7 @@ trial_list
 sieve
 b001
 b001_array
+optimized_dijkstra
 *.exe
 *.out
 *.app

@@ -1,13 +1,15 @@
 CFLAGS += -Wall -Wextra -pedantic -Ilib
 
-ifdef RELEASE
-CFLAGS += -DNDEBUG=1 -O3
-endif
-
 EXECS := $(patsubst src/%.c,%,$(wildcard src/*.c))
 
-.PHONY: all lib clean $(addsuffix -clean,$(EXECS))
+.PHONY: all lib clean $(addsuffix -clean,$(EXECS)) debug release
 all: $(EXECS)
+
+release: CFLAGS += -DNDEBUG -O3
+release: $(EXECS)
+
+debug: CFLAGS += -DDEBUG -g
+debug: $(EXECS)
 
 define executable
 $(1): src/$(1).o lib.a
@@ -29,3 +31,5 @@ lib/%.o: lib/%.c lib/%.h
 
 src/%.o: src/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+FORCE:
