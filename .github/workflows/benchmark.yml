@@ -7,6 +7,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build source
         run: make release
-      - name: Run benchmark script
-        run: ./benchmark.sh
+      - name: Run benchmark
+        run: |
+          ./benchmark.sh | tee results.csv
         shell: bash
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark
+          path: results.csv
