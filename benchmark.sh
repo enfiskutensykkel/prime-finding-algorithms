@@ -1,13 +1,6 @@
 #!/bin/bash -
 set -e
 
-N=$1
-
-if [ -z "$N" ]
-then
-    N=10000000
-fi
-
 candidates=( $(find ./src/ -name "*.c" | sed -E "s/\.\/src\/([^\.]*).c/\1/g") )
 
 if [ ! -x "/usr/bin/time" ]
@@ -37,24 +30,29 @@ declare -a all_results
 
 if [ -t 1 ]
 then
-    echo "Benchmark N=$N, detected algorithms: ${programs[@]}"
+    echo "Detected algorithms: ${programs[@]}"
 else
-    echo "#algorithm; N; runtime; memory_usage"
+    echo "algorithm; N; runtime_secs; memory_usage_kB"
 fi
 
-for prog in ${programs[@]}
+for exp in {5..9}
 do
-    if [ -t 1 ]
-    then
-        echo -n "Running ${prog}..."
-    fi
-    result=( $( ( /usr/bin/time -f "%U %M" ./${prog} $N 1> /dev/null ) 2>&1 ) )
-    results["${prog}"]="${result[@]}"
+    N=$(( 10**exp ))
 
-    if [ -t 1 ]
-    then
-        echo "OK; ${result[0]} seconds (${result[1]} kB)"
-    else
-        echo "${prog}; $N; ${result[0]}; ${result[1]}"
-    fi
+    for prog in ${programs[@]}
+    do
+        if [ -t 1 ]
+        then
+            echo -n "Running ${prog} N=$N..."
+        fi
+        result=( $( ( /usr/bin/time -f "%U %M" ./${prog} $N 1> /dev/null ) 2>&1 ) )
+        results["${prog}"]="${result[@]}"
+
+        if [ -t 1 ]
+        then
+            echo "OK; ${result[0]} seconds (${result[1]} kB)"
+        else
+            echo "${prog}; $N; ${result[0]}; ${result[1]}"
+        fi
+    done
 done
