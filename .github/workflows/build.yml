@@ -1,13 +1,41 @@
-name: Build
+name: Build and Verify
 on:
   push:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: make
-      run: make release
+      - uses: actions/checkout@v4
+      - name: Build executables
+        run: make release
+      - name: Prepare build artifacts
+        run: |
+          mkdir -p build
+          for file in `find "." -maxdepth 1 -type f ! -name "*.*" -executable -print`; do
+            cp $file build/
+          done
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: executables
+          path: build
+
+  Verify:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: executables
+          path: build
+      - name: Run verification script
+        run: |
+          chmod +x build/*
+          cp build/* ./
+          ./verify.sh
+        shell: bash
