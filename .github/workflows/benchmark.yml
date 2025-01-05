@@ -1,18 +1,12 @@
-name: Run Benchmark
+name: Build and Run Benchmark
 on: workflow_dispatch
 jobs:
   Benchmark:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: executables
-          path: build
+      - name: Build source
+        run: make release
       - name: Run benchmark script
-        run: |
-          chmod +x build/*
-          cp build/* ./
-          ./benchmark.sh
+        run: ./benchmark.sh
         shell: bash
